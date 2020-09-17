@@ -17,22 +17,22 @@ Renderer::~Renderer()
 
 void Renderer::clear() const
 {
-    SDL_SetRenderDrawColor(renderer, 0x1E, 0x1E, 0x1E, 0xFF);
+    SDL_SetRenderDrawColor(renderer, 31, 31, 31, 255);
     SDL_RenderClear(renderer);
 }
 
-void Renderer::drawBox(int col, int row) const
+void Renderer::drawBox(int col, int row, int r, int g, int b) const
 {
     SDL_Rect block;
     block.w = 100;
     block.h = 100;
-    SDL_SetRenderDrawColor(renderer, 0x00, 0x7A, 0xCC, 0xFF);
+    SDL_SetRenderDrawColor(renderer, r, g, b, 255);
     block.x = col * block.w;
     block.y = row * block.h;
     SDL_RenderFillRect(renderer, &block);
 }
 
-void Renderer::render(std::vector<std::vector<int>> &board) const
+void Renderer::render(std::vector<std::vector<Game::Block>> &board) const
 {
     std::cout << "Rendering\n";
     clear();
@@ -41,9 +41,13 @@ void Renderer::render(std::vector<std::vector<int>> &board) const
     {
         for (int row = 0; row < board[col].size(); row++)
         {
-            if (board[col][row] == 1)
+            if (board[col][row] == Game::Block::snake)
             {
-                drawBox(col, row);
+                drawBox(col, row, 0, 255, 0);
+            }
+            else if (board[col][row] == Game::Block::food)
+            {
+                drawBox(col, row, 255, 0, 0);
             }
         }
     }

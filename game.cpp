@@ -4,10 +4,10 @@
 #include "renderer.h"
 #include "renderer.cpp"
 
-const int SCREEN_WIDTH = 600;
-const int SCREEN_HEIGHT = 600;
-const int GRID_WIDTH = 6;
-const int GRID_HEIGHT = 6;
+const int SCREEN_WIDTH = 800;
+const int SCREEN_HEIGHT = 800;
+const int GRID_WIDTH = 8;
+const int GRID_HEIGHT = 8;
 const int FPS = 4;
 
 Game::Game()
@@ -24,8 +24,8 @@ void Game::initializeBoard()
 {
     for (int col = 0; col < GRID_WIDTH; col++)
     {
-        std::vector<int> column;
-        for (int row = 0; row < GRID_HEIGHT; row++) column.push_back(0);
+        std::vector<Block> column;
+        for (int row = 0; row < GRID_HEIGHT; row++) column.push_back(Block::empty);
         board.push_back(column);
     }
 }
@@ -67,7 +67,7 @@ void Game::startGameLoop()
             }
         }
 
-        board[x][y] = 0;
+        board[x][y] = Block::empty;
 
         switch (direction)
         {
@@ -89,7 +89,7 @@ void Game::startGameLoop()
                 break;
         }
 
-        board[x][y] = 1;
+        board[x][y] = Block::snake;
 
         renderer.render(board);
 

@@ -9,11 +9,12 @@ class Game
         Game();
         void gameOver();
         enum class Direction { up, down, left, right };
+        enum class Block { empty, snake, food };
     private:
         void initializeBoard();
         void startGameLoop();
         bool running;
-        std::vector<std::vector<int>> board;
+        std::vector<std::vector<Block>> board;
 };
 
 #endif
