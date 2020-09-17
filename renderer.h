@@ -6,11 +6,12 @@ class Renderer
     public:
         Renderer(int screenWidth, int screenHeight);
         ~Renderer();
-        void render();
-
+        void render(std::vector<std::vector<int>> &board) const;
     private:
         SDL_Window *window;
         SDL_Renderer *renderer;
+        void clear() const;
+        void drawBox(int col, int row) const;
 };
 
 #endif

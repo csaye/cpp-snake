@@ -1,4 +1,3 @@
-#include <vector>
 #include <thread>
 
 #include "game.h"
@@ -7,7 +6,9 @@
 
 const int SCREEN_WIDTH = 600;
 const int SCREEN_HEIGHT = 600;
-const int FPS = 10;
+const int GRID_WIDTH = 6;
+const int GRID_HEIGHT = 6;
+const int FPS = 4;
 
 Game::Game()
 {
@@ -21,10 +22,10 @@ void Game::gameOver()
 
 void Game::initializeBoard()
 {
-    for (int col = 0; col < SCREEN_WIDTH; col += 100)
+    for (int col = 0; col < GRID_WIDTH; col++)
     {
         std::vector<int> column;
-        for (int row = 0; row < SCREEN_HEIGHT; row += 100) column.push_back(0);
+        for (int row = 0; row < GRID_HEIGHT; row++) column.push_back(0);
         board.push_back(column);
     }
 }
@@ -35,23 +36,63 @@ void Game::startGameLoop()
 
     running = true;
     SDL_Event event;
-    Direction direction;
+    Direction direction = Direction::down;
     initializeBoard();
+    int x = 0;
+    int y = 0;
 
     while (running)
     {
-        std::this_thread::sleep_for(std::chrono::milliseconds(1000 / FPS));
-
         while (SDL_PollEvent(&event))
         {
             if (event.type == SDL_QUIT) gameOver();
 
-            if (event.type == SDLK_UP) direction = Direction::up;
-            if (event.type == SDLK_DOWN) direction = Direction::down;
-            if (event.type == SDLK_LEFT) direction = Direction::left;
-            if (event.type == SDLK_RIGHT) direction = Direction::right;
+            if (event.type == SDL_KEYDOWN)
+            {
+                switch (event.key.keysym.sym)
+                {
+                    case SDLK_UP:
+                        direction = Direction::up;
+                        break;
+                    case SDLK_DOWN:
+                        direction = Direction::down;
+                        break;
+                    case SDLK_LEFT:
+                        direction = Direction::left;
+                        break;
+                    case SDLK_RIGHT:
+                        direction = Direction::right;
+                        break;
+                }
+            }
         }
 
-        renderer.render();
+        board[x][y] = 0;
+
+        switch (direction)
+        {
+            case Direction::up:
+                std::cout << "up";
+                y = y > 0 ? y - 1 : GRID_HEIGHT - 1;
+                break;
+            case Direction::down:
+            std::cout << "down";
+                y = y < GRID_HEIGHT - 1 ? y + 1 : 0;
+                break;
+            case Direction::left:
+                std::cout << "left";
+                x = x > 0 ? x - 1 : GRID_WIDTH - 1;
+                break;
+            case Direction::right:
+                std::cout << "right";
+                x = x < GRID_WIDTH - 1 ? x + 1 : 0;
+                break;
+        }
+
+        board[x][y] = 1;
+
+        renderer.render(board);
+
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000 / FPS));
     }
 }
