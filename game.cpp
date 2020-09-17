@@ -3,11 +3,10 @@
 #include "game.h"
 #include "renderer.h"
 #include "renderer.cpp"
-#include "input.h"
-#include "input.cpp"
 
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
+const int FPS = 10;
 
 Game::Game()
 {
@@ -22,13 +21,22 @@ void Game::gameOver()
 void Game::startGameLoop()
 {
     running = true;
+    
     Renderer renderer(SCREEN_WIDTH, SCREEN_HEIGHT);
-    Input input;
-    input.startInputLoop(this);
+
+    SDL_Event event;
 
     while (running)
     {
-        std::this_thread::sleep_for(std::chrono::milliseconds(500));
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000 / FPS));
+
+        while (SDL_PollEvent(&event))
+        {
+            if (event.type == SDL_QUIT) gameOver();
+            if (event.type == SDL_KEYDOWN) gameOver();
+            if (event.type == SDL_MOUSEBUTTONDOWN) gameOver();
+        }
+        
         renderer.render();
     }
 }
