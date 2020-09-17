@@ -4,10 +4,11 @@
 class Renderer
 {
     public:
-        Renderer(int screenWidth, int screenHeight);
+        Renderer(Game *game_, int screenWidth, int screenHeight);
         ~Renderer();
         void render(std::vector<std::vector<Game::Block>> &board) const;
     private:
+        Game *game;
         SDL_Window *window;
         SDL_Renderer *renderer;
         void clear() const;

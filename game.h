@@ -14,7 +14,7 @@ class Game
 {
     public:
         Game();
-        void gameOver();
+        int getScore() { return score; }
         enum class Direction { up, down, left, right };
         enum class Block { empty, snake, food };
     private:
@@ -23,6 +23,7 @@ class Game
         void spawnFood();
         void startGameLoop();
         bool running;
+        int score;
         std::vector<std::vector<Block>> board;
 };
 

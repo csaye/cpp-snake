@@ -16,11 +16,6 @@ Game::Game()
     startGameLoop();
 }
 
-void Game::gameOver()
-{
-    running = false;
-}
-
 int Game::getPseudoRandom()
 {
     std::chrono::milliseconds ms = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
@@ -53,7 +48,7 @@ void Game::spawnFood()
 
 void Game::startGameLoop()
 {
-    Renderer renderer(SCREEN_WIDTH, SCREEN_HEIGHT);
+    Renderer renderer(this, SCREEN_WIDTH, SCREEN_HEIGHT);
 
     running = true;
     SDL_Event event;
@@ -73,7 +68,7 @@ void Game::startGameLoop()
     {
         while (SDL_PollEvent(&event))
         {
-            if (event.type == SDL_QUIT) gameOver();
+            if (event.type == SDL_QUIT) running = false;
 
             if (event.type == SDL_KEYDOWN)
             {
@@ -98,19 +93,15 @@ void Game::startGameLoop()
         switch (direction)
         {
             case Direction::up:
-                std::cout << "up";
                 y = y > 0 ? y - 1 : GRID_HEIGHT - 1;
                 break;
             case Direction::down:
-            std::cout << "down";
                 y = y < GRID_HEIGHT - 1 ? y + 1 : 0;
                 break;
             case Direction::left:
-                std::cout << "left";
                 x = x > 0 ? x - 1 : GRID_WIDTH - 1;
                 break;
             case Direction::right:
-                std::cout << "right";
                 x = x < GRID_WIDTH - 1 ? x + 1 : 0;
                 break;
         }
@@ -129,11 +120,12 @@ void Game::startGameLoop()
             }
             case Block::snake:
             {
-                gameOver();
+                running = false;
                 break;
             }
             case Block::food:
             {
+                score++;
                 Position head(x, y);
                 board[x][y] = Block::snake;
                 snakePositions.push(head);

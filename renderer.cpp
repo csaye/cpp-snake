@@ -1,16 +1,19 @@
-#include <SDL2/SDL.h>
 #include <iostream>
+#include <SDL2/SDL.h>
 
 #include "renderer.h"
 
-Renderer::Renderer(int screenWidth, int screenHeight)
+Renderer::Renderer(Game *game_, int screenWidth, int screenHeight)
 {
-    window = SDL_CreateWindow("My Window", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, screenWidth, screenHeight, SDL_WINDOW_SHOWN);
+    game = game_;
+    window = SDL_CreateWindow("Snake", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, screenWidth, screenHeight, SDL_WINDOW_SHOWN);
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 }
 
 Renderer::~Renderer()
 {
+    std::cout << "You died.\n";
+    std::cout << "Your final score was " << game->getScore() << ".\n";
     SDL_DestroyWindow(window);
     SDL_Quit();
 }
@@ -34,7 +37,6 @@ void Renderer::drawBox(int col, int row, int r, int g, int b) const
 
 void Renderer::render(std::vector<std::vector<Game::Block>> &board) const
 {
-    std::cout << "Rendering\n";
     clear();
 
     for (int col = 0; col < board.size(); col++)
