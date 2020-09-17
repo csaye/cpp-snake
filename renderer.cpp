@@ -9,18 +9,6 @@ Renderer::Renderer(int screenWidth, int screenHeight)
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
     SDL_RenderPresent(renderer);
-
-    SDL_Event e;
-    bool quit = false;
-    while (!quit)
-    {
-        while (SDL_PollEvent(&e))
-        {
-            if (e.type == SDL_QUIT) quit = true;
-            if (e.type == SDL_KEYDOWN) quit = true;
-            if (e.type == SDL_MOUSEBUTTONDOWN) quit = true;
-        }
-    }
 }
 
 Renderer::~Renderer()
