@@ -1,4 +1,5 @@
 #include <thread>
+#include <queue>
 
 #include "game.h"
 #include "renderer.h"
@@ -58,6 +59,13 @@ void Game::startGameLoop()
     SDL_Event event;
     Direction direction = Direction::down;
     initializeBoard();
+    
+    std::queue<Position> snakePositions;
+    board[0][0] = Block::snake;
+    Position head(0, 0);
+    snakePositions.push(head);
+    spawnFood();
+
     int x = 0;
     int y = 0;
 
@@ -87,8 +95,6 @@ void Game::startGameLoop()
             }
         }
 
-        board[x][y] = Block::empty;
-
         switch (direction)
         {
             case Direction::up:
@@ -109,7 +115,32 @@ void Game::startGameLoop()
                 break;
         }
 
-        board[x][y] = Block::snake;
+        switch (board[x][y])
+        {
+            case Block::empty:
+            {
+                Position tail = snakePositions.front();
+                board[tail.x][tail.y] = Block::empty;
+                snakePositions.pop();
+                Position head(x, y);
+                board[x][y] = Block::snake;
+                snakePositions.push(head);
+                break;
+            }
+            case Block::snake:
+            {
+                gameOver();
+                break;
+            }
+            case Block::food:
+            {
+                Position head(x, y);
+                board[x][y] = Block::snake;
+                snakePositions.push(head);
+                spawnFood();
+                break;
+            }
+        }
 
         renderer.render(board);
 

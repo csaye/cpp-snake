@@ -41,13 +41,16 @@ void Renderer::render(std::vector<std::vector<Game::Block>> &board) const
     {
         for (int row = 0; row < board[col].size(); row++)
         {
-            if (board[col][row] == Game::Block::snake)
+            switch (board[col][row])
             {
-                drawBox(col, row, 0, 255, 0);
-            }
-            else if (board[col][row] == Game::Block::food)
-            {
-                drawBox(col, row, 255, 0, 0);
+                case Game::Block::empty:
+                    break;
+                case Game::Block::snake:
+                    drawBox(col, row, 0, 255, 0);
+                    break;
+                case Game::Block::food:
+                    drawBox(col, row, 255, 0, 0);
+                    break;
             }
         }
     }
