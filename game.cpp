@@ -20,6 +20,12 @@ void Game::gameOver()
     running = false;
 }
 
+int Game::getPseudoRandom()
+{
+    std::chrono::milliseconds ms = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
+    return ms.count() * -1;
+}
+
 void Game::initializeBoard()
 {
     for (int col = 0; col < GRID_WIDTH; col++)
@@ -28,6 +34,20 @@ void Game::initializeBoard()
         for (int row = 0; row < GRID_HEIGHT; row++) column.push_back(Block::empty);
         board.push_back(column);
     }
+}
+
+void Game::spawnFood()
+{
+    int x = getPseudoRandom() % GRID_WIDTH;
+    int y = getPseudoRandom() % GRID_HEIGHT;
+    
+    while (board[x][y] != Block::empty)
+    {
+        x = getPseudoRandom() % GRID_WIDTH;
+        y = getPseudoRandom() % GRID_HEIGHT;
+    }
+
+    board[x][y] = Block::food;
 }
 
 void Game::startGameLoop()
