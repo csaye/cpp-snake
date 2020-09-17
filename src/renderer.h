@@ -6,6 +6,7 @@ class Renderer
     public:
         Renderer(Game *game_, int screenWidth, int screenHeight);
         ~Renderer();
+        void setWindowTitle(std::string title);
         void render(std::vector<std::vector<Game::Block>> &board) const;
     private:
         Game *game;

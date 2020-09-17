@@ -9,7 +9,7 @@ const int SCREEN_WIDTH = 800;
 const int SCREEN_HEIGHT = 800;
 const int GRID_WIDTH = 8;
 const int GRID_HEIGHT = 8;
-const int FPS = 4;
+const int FPS = 5;
 
 Game::Game()
 {
@@ -60,6 +60,7 @@ void Game::startGameLoop()
     Position head(0, 0);
     snakePositions.push(head);
     spawnFood();
+    renderer.setWindowTitle("Snake: score 0");
 
     int x = 0;
     int y = 0;
@@ -75,16 +76,16 @@ void Game::startGameLoop()
                 switch (event.key.keysym.sym)
                 {
                     case SDLK_UP:
-                        direction = Direction::up;
+                        if (direction != Direction::down) direction = Direction::up;
                         break;
                     case SDLK_DOWN:
-                        direction = Direction::down;
+                        if (direction != Direction::up) direction = Direction::down;
                         break;
                     case SDLK_LEFT:
-                        direction = Direction::left;
+                        if (direction != Direction::right) direction = Direction::left;
                         break;
                     case SDLK_RIGHT:
-                        direction = Direction::right;
+                        if (direction != Direction::left) direction = Direction::right;
                         break;
                 }
             }
@@ -126,6 +127,7 @@ void Game::startGameLoop()
             case Block::food:
             {
                 score++;
+                renderer.setWindowTitle("Snake: score " + std::to_string(score));
                 Position head(x, y);
                 board[x][y] = Block::snake;
                 snakePositions.push(head);
